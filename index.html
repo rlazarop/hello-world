@@ -1,7 +1,257 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Baúl de Contraseñas</title>
+    <style>
+        /* --- ESTILOS CSS (Diseño y Responsividad) --- */
+        :root {
+            --primary: #4a90e2;
+            --bg: #f4f7f6;
+            --text: #333;
+            --card-bg: #ffffff;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px; /* Límite de ancho para PC */
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+        }
+
+        /* Formulario */
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            box-sizing: border-box; /* Para que el padding no rompa el ancho */
+            font-size: 1rem;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        button.btn-save {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        button.btn-save:hover {
+            background-color: #357abd;
+        }
+
+        /* Lista de contraseñas */
+        .pass-list {
+            margin-top: 2rem;
+            border-top: 2px solid #eee;
+            padding-top: 1rem;
+        }
+
+        .pass-item {
+            background: #f9f9f9;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .site-name {
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: var(--primary);
+        }
+
+        .credentials {
+            font-family: monospace;
+            background: #eee;
+            padding: 5px;
+            border-radius: 4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .actions {
+            margin-top: 10px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-small {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
+        .btn-show { background-color: #e2e6ea; color: #333; }
+        .btn-delete { background-color: #ff6b6b; color: white; }
+
+        /* Media Query para móviles muy pequeños */
+        @media (max-width: 400px) {
+            .container { padding: 1rem; }
+            h1 { font-size: 1.5rem; }
+        }
+    </style>
+</head>
 <body>
-<h1>¡ESTO ES UNA PRUEBA EN UNA RAMA!</h1>
-<p>Si esto sale mal, no importa.</p>
+
+<div class="container">
+    <h1>🔐 Mis Contraseñas</h1>
+    
+    <form id="passForm">
+        <div class="form-group">
+            <label for="site">Sitio Web / App</label>
+            <input type="text" id="site" placeholder="Ej: Netflix, Gmail..." required>
+        </div>
+        <div class="form-group">
+            <label for="username">Usuario / Email</label>
+            <input type="text" id="username" placeholder="usuario@email.com" required>
+        </div>
+        <div class="form-group">
+            <label for="password">Contraseña</label>
+            <input type="password" id="password" placeholder="********" required>
+        </div>
+        <button type="submit" class="btn-save">Guardar Contraseña</button>
+    </form>
+
+    <div id="passList" class="pass-list">
+        </div>
+</div>
+
+<script>
+    /* --- LÓGICA JAVASCRIPT --- */
+
+    // 1. Referencias al DOM
+    const form = document.getElementById('passForm');
+    const passList = document.getElementById('passList');
+
+    // 2. Cargar contraseñas al iniciar
+    document.addEventListener('DOMContentLoaded', loadPasswords);
+
+    // 3. Evento Guardar
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const site = document.getElementById('site').value;
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+
+        // Crear objeto
+        const newEntry = {
+            id: Date.now(), // ID único basado en el tiempo
+            site,
+            username,
+            // NOTA: btoa() solo codifica en Base64 (no es encriptación real)
+            password: btoa(password) 
+        };
+
+        // Guardar en LocalStorage
+        saveToLocalStorage(newEntry);
+        
+        // Limpiar formulario y recargar lista
+        form.reset();
+        loadPasswords();
+    });
+
+    // 4. Función para guardar
+    function saveToLocalStorage(entry) {
+        let passwords = JSON.parse(localStorage.getItem('myPasswords')) || [];
+        passwords.push(entry);
+        localStorage.setItem('myPasswords', JSON.stringify(passwords));
+    }
+
+    // 5. Función para cargar y mostrar (Render)
+    function loadPasswords() {
+        passList.innerHTML = '';
+        let passwords = JSON.parse(localStorage.getItem('myPasswords')) || [];
+
+        passwords.forEach(entry => {
+            // Decodificar contraseña para mostrarla (atob)
+            const realPass = atob(entry.password);
+            
+            const div = document.createElement('div');
+            div.className = 'pass-item';
+            div.innerHTML = `
+                <div class="site-name">${entry.site}</div>
+                <div>Usuario: <strong>${entry.username}</strong></div>
+                <div class="credentials">
+                    <span class="masked-pass" id="pass-${entry.id}">••••••••</span>
+                </div>
+                <div class="actions">
+                    <button class="btn-small btn-show" onclick="togglePass(${entry.id}, '${realPass}')">Mostrar/Ocultar</button>
+                    <button class="btn-small btn-delete" onclick="deletePass(${entry.id})">Eliminar</button>
+                </div>
+            `;
+            passList.appendChild(div);
+        });
+    }
+
+    // 6. Mostrar/Ocultar contraseña
+    window.togglePass = function(id, realPass) {
+        const span = document.getElementById(`pass-${id}`);
+        if (span.innerText === '••••••••') {
+            span.innerText = realPass;
+        } else {
+            span.innerText = '••••••••';
+        }
+    }
+
+    // 7. Eliminar contraseña
+    window.deletePass = function(id) {
+        if(confirm('¿Seguro que quieres eliminar esta contraseña?')) {
+            let passwords = JSON.parse(localStorage.getItem('myPasswords')) || [];
+            passwords = passwords.filter(p => p.id !== id);
+            localStorage.setItem('myPasswords', JSON.stringify(passwords));
+            loadPasswords();
+        }
+    }
+</script>
+
 </body>
 </html>
