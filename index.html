@@ -3,161 +3,240 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mi Baúl de Contraseñas</title>
+    <title>NEO-VAULT: Gestor de Claves</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+
     <style>
-        /* --- ESTILOS CSS (Diseño y Responsividad) --- */
+        /* --- ESTILOS CSS FUTURISTAS --- */
         :root {
-            --primary: #4a90e2;
-            --bg: #f4f7f6;
-            --text: #333;
-            --card-bg: #ffffff;
+            --bg-dark: #0a0a12; /* Fondo casi negro */
+            --card-bg: rgba(30, 30, 45, 0.7); /* Cristal oscuro semitransparente */
+            --neon-blue: #00f3ff; /* Cian eléctrico */
+            --neon-purple: #bc13fe; /* Morado neón */
+            --text-primary: #e0e0ff;
+            --text-secondary: #a0a0c0;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg);
-            color: var(--text);
+            font-family: 'Roboto Mono', monospace; /* Fuente tipo código */
+            background-color: var(--bg-dark);
+            /* Fondo con patrón de circuito sutil */
+            background-image: 
+                radial-gradient(circle at 20% 30%, rgba(0, 243, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(188, 19, 254, 0.1) 0%, transparent 50%),
+                linear-gradient(rgba(10, 10, 18, 0.9), rgba(10, 10, 18, 0.9)),
+                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cg fill-rule='evenodd'%3E%3Cg fill='%231d1d2e' fill-opacity='0.4'%3E%3Cpath opacity='.5' d='M96 95h4v1h-4v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9zm-1 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm9-10v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm9-10v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm9-10v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9z'/%3E%3Cpath d='M6 5V0H5v5H0v1h5v94h1V6h94V5H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            color: var(--text-primary);
             margin: 0;
             padding: 20px;
+            min-height: 100vh;
             display: flex;
             justify-content: center;
+            align-items: center;
+            box-sizing: border-box;
         }
 
         .container {
             width: 100%;
-            max-width: 500px; /* Límite de ancho para PC */
+            max-width: 500px;
             background: var(--card-bg);
-            padding: 2rem;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            /* Efecto Glassmorphism */
+            backdrop-filter: blur(10px); 
+            -webkit-backdrop-filter: blur(10px);
+            padding: 2.5rem;
+            border-radius: 16px;
+            /* Borde brillante */
+            border: 1px solid rgba(0, 243, 255, 0.3);
+            box-shadow: 0 0 30px rgba(0, 243, 255, 0.15), inset 0 0 20px rgba(0,0,0,0.5);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Línea de escaneo decorativa */
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--neon-blue), transparent);
+            animation: scan 4s infinite linear;
+        }
+
+        @keyframes scan {
+            0% { left: -100%; }
+            100% { left: 100%; }
         }
 
         h1 {
+            font-family: 'Orbitron', sans-serif; /* Fuente título Sci-Fi */
             text-align: center;
-            color: var(--primary);
-            margin-bottom: 1.5rem;
+            color: var(--neon-blue);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 2rem;
+            text-shadow: 0 0 10px rgba(0, 243, 255, 0.5);
         }
 
         /* Formulario */
         .form-group {
-            margin-bottom: 1rem;
+            margin-bottom: 1.2rem;
         }
 
         label {
             display: block;
             margin-bottom: 0.5rem;
-            font-weight: bold;
-            font-size: 0.9rem;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.8rem;
+            color: var(--neon-blue);
+            letter-spacing: 1px;
         }
 
         input {
             width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            box-sizing: border-box; /* Para que el padding no rompa el ancho */
-            font-size: 1rem;
+            padding: 12px;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid #333;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-family: 'Roboto Mono', monospace;
+            color: var(--neon-blue);
+            transition: all 0.3s ease;
+        }
+        
+        input::placeholder {
+            color: rgba(0, 243, 255, 0.3);
         }
 
         input:focus {
             outline: none;
-            border-color: var(--primary);
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.4);
+            background: rgba(0, 15, 20, 0.6);
         }
 
         button.btn-save {
             width: 100%;
-            padding: 12px;
-            background-color: var(--primary);
-            color: white;
+            padding: 15px;
+            /* Gradiente futurista */
+            background: linear-gradient(45deg, var(--neon-blue), var(--neon-purple));
+            color: #fff;
             border: none;
-            border-radius: 6px;
-            font-size: 1rem;
+            border-radius: 4px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: bold;
+            letter-spacing: 1px;
             cursor: pointer;
-            transition: background 0.3s;
+            transition: all 0.3s;
+            text-shadow: 0 0 5px rgba(0,0,0,0.5);
+            position: relative;
+            overflow: hidden;
         }
 
         button.btn-save:hover {
-            background-color: #357abd;
+            background: linear-gradient(45deg, var(--neon-purple), var(--neon-blue));
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.6);
         }
 
         /* Lista de contraseñas */
         .pass-list {
-            margin-top: 2rem;
-            border-top: 2px solid #eee;
-            padding-top: 1rem;
+            margin-top: 2.5rem;
+            border-top: 1px solid rgba(0, 243, 255, 0.2);
+            padding-top: 1.5rem;
         }
 
         .pass-item {
-            background: #f9f9f9;
-            border: 1px solid #eee;
-            border-radius: 8px;
-            padding: 1rem;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(188, 19, 254, 0.3); /* Borde morado */
+            border-left: 4px solid var(--neon-purple); /* Indicador lateral */
+            border-radius: 6px;
+            padding: 1.2rem;
             margin-bottom: 1rem;
-            position: relative;
             display: flex;
             flex-direction: column;
-            gap: 5px;
+            gap: 8px;
+            transition: transform 0.2s;
+        }
+        
+        .pass-item:hover {
+             transform: translateX(5px);
+             background: rgba(188, 19, 254, 0.05);
+             box-shadow: 0 0 15px rgba(188, 19, 254, 0.2);
         }
 
         .site-name {
+            font-family: 'Orbitron', sans-serif;
             font-weight: bold;
-            font-size: 1.1rem;
-            color: var(--primary);
+            font-size: 1.2rem;
+            color: var(--neon-purple);
+            text-shadow: 0 0 5px rgba(188, 19, 254, 0.4);
+        }
+        
+        .username-display {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
         }
 
         .credentials {
-            font-family: monospace;
-            background: #eee;
-            padding: 5px;
+            font-family: 'Roboto Mono', monospace;
+            background: rgba(0,0,0,0.3);
+            padding: 10px;
             border-radius: 4px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            border: 1px dashed rgba(0, 243, 255, 0.3);
+            color: var(--neon-blue);
+            letter-spacing: 2px;
         }
 
         .actions {
-            margin-top: 10px;
+            margin-top: 12px;
             display: flex;
             gap: 10px;
         }
 
         .btn-small {
-            padding: 5px 10px;
-            border: none;
+            padding: 8px 12px;
+            border: 1px solid var(--neon-blue);
+            background: transparent;
+            color: var(--neon-blue);
             border-radius: 4px;
             cursor: pointer;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
+            font-family: 'Orbitron', sans-serif;
+            transition: all 0.3s;
         }
 
-        .btn-show { background-color: #e2e6ea; color: #333; }
-        .btn-delete { background-color: #ff6b6b; color: white; }
+        .btn-show:hover { background: rgba(0, 243, 255, 0.2); box-shadow: 0 0 10px rgba(0, 243, 255, 0.4);}
+        .btn-delete { border-color: #ff3366; color: #ff3366; }
+        .btn-delete:hover { background: rgba(255, 51, 102, 0.2); box-shadow: 0 0 10px rgba(255, 51, 102, 0.4); }
 
-        /* Media Query para móviles muy pequeños */
-        @media (max-width: 400px) {
-            .container { padding: 1rem; }
+        /* Responsive */
+        @media (max-width: 480px) {
+            .container { padding: 1.5rem; }
             h1 { font-size: 1.5rem; }
+            input { padding: 10px; }
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>🔐 Mis Contraseñas</h1>
+    <h1>// NEO-VAULT v1.0 //</h1>
     
     <form id="passForm">
         <div class="form-group">
-            <label for="site">Sitio Web / App</label>
-            <input type="text" id="site" placeholder="Ej: Netflix, Gmail..." required>
+            <label for="site">> DESTINO (Sitio/App)</label>
+            <input type="text" id="site" placeholder="Ej: CORP_NET, GMAIL_SECURE..." required autocomplete="off">
         </div>
         <div class="form-group">
-            <label for="username">Usuario / Email</label>
-            <input type="text" id="username" placeholder="usuario@email.com" required>
+            <label for="username">> IDENTIFICADOR (Usuario)</label>
+            <input type="text" id="username" placeholder="user@net.com" required autocomplete="off">
         </div>
         <div class="form-group">
-            <label for="password">Contraseña</label>
-            <input type="password" id="password" placeholder="********" required>
+            <label for="password">> CÓDIGO DE ACCESO</label>
+            <input type="password" id="password" placeholder="••••••••" required autocomplete="off">
         </div>
-        <button type="submit" class="btn-save">Guardar Contraseña</button>
+        <button type="submit" class="btn-save">ENCRIPTAR Y GUARDAR DATOS</button>
     </form>
 
     <div id="passList" class="pass-list">
@@ -165,89 +244,84 @@
 </div>
 
 <script>
-    /* --- LÓGICA JAVASCRIPT --- */
+    /* --- LÓGICA JAVASCRIPT (Idéntica a la versión anterior) --- */
 
-    // 1. Referencias al DOM
     const form = document.getElementById('passForm');
     const passList = document.getElementById('passList');
 
-    // 2. Cargar contraseñas al iniciar
     document.addEventListener('DOMContentLoaded', loadPasswords);
 
-    // 3. Evento Guardar
     form.addEventListener('submit', function(e) {
         e.preventDefault();
-
         const site = document.getElementById('site').value;
         const username = document.getElementById('username').value;
         const password = document.getElementById('password').value;
 
-        // Crear objeto
         const newEntry = {
-            id: Date.now(), // ID único basado en el tiempo
+            id: Date.now(),
             site,
             username,
-            // NOTA: btoa() solo codifica en Base64 (no es encriptación real)
+            // ADVERTENCIA: btoa NO es encriptación segura. Solo para fines educativos.
             password: btoa(password) 
         };
 
-        // Guardar en LocalStorage
         saveToLocalStorage(newEntry);
-        
-        // Limpiar formulario y recargar lista
         form.reset();
         loadPasswords();
     });
 
-    // 4. Función para guardar
     function saveToLocalStorage(entry) {
-        let passwords = JSON.parse(localStorage.getItem('myPasswords')) || [];
+        let passwords = JSON.parse(localStorage.getItem('neoVaultPasswords')) || [];
         passwords.push(entry);
-        localStorage.setItem('myPasswords', JSON.stringify(passwords));
+        localStorage.setItem('neoVaultPasswords', JSON.stringify(passwords));
     }
 
-    // 5. Función para cargar y mostrar (Render)
     function loadPasswords() {
         passList.innerHTML = '';
-        let passwords = JSON.parse(localStorage.getItem('myPasswords')) || [];
+        let passwords = JSON.parse(localStorage.getItem('neoVaultPasswords')) || [];
 
-        passwords.forEach(entry => {
-            // Decodificar contraseña para mostrarla (atob)
+        if (passwords.length === 0) {
+            passList.innerHTML = '<p style="text-align:center; color: var(--text-secondary); font-size: 0.8rem;">> NO SE DETECTARON DATOS ENCRIPTADOS <</p>';
+            return;
+        }
+
+        passwords.reverse().forEach(entry => { // Mostramos las más nuevas primero
             const realPass = atob(entry.password);
-            
             const div = document.createElement('div');
             div.className = 'pass-item';
             div.innerHTML = `
-                <div class="site-name">${entry.site}</div>
-                <div>Usuario: <strong>${entry.username}</strong></div>
+                <div class="site-name">${entry.site.toUpperCase()}</div>
+                <div class="username-display">ID: ${entry.username}</div>
                 <div class="credentials">
-                    <span class="masked-pass" id="pass-${entry.id}">••••••••</span>
+                    <span id="pass-${entry.id}">[ENCRIPTADO] ••••••••</span>
                 </div>
                 <div class="actions">
-                    <button class="btn-small btn-show" onclick="togglePass(${entry.id}, '${realPass}')">Mostrar/Ocultar</button>
-                    <button class="btn-small btn-delete" onclick="deletePass(${entry.id})">Eliminar</button>
+                    <button class="btn-small btn-show" onclick="togglePass(${entry.id}, '${realPass}')">DESENCRIPTAR</button>
+                    <button class="btn-small btn-delete" onclick="deletePass(${entry.id})">PURGAR DATOS</button>
                 </div>
             `;
             passList.appendChild(div);
         });
     }
 
-    // 6. Mostrar/Ocultar contraseña
     window.togglePass = function(id, realPass) {
         const span = document.getElementById(`pass-${id}`);
-        if (span.innerText === '••••••••') {
-            span.innerText = realPass;
+        if (span.innerText.includes('••••••••')) {
+            span.innerText = `> ${realPass} <`;
+            span.style.color = '#fff';
+            span.style.textShadow = '0 0 5px #fff';
         } else {
-            span.innerText = '••••••••';
+            span.innerText = '[ENCRIPTADO] ••••••••';
+            span.style.color = 'var(--neon-blue)';
+            span.style.textShadow = 'none';
         }
     }
 
-    // 7. Eliminar contraseña
     window.deletePass = function(id) {
-        if(confirm('¿Seguro que quieres eliminar esta contraseña?')) {
-            let passwords = JSON.parse(localStorage.getItem('myPasswords')) || [];
+        if(confirm('ADVERTENCIA: ¿Desea purgar permanentemente este registro de datos?')) {
+            let passwords = JSON.parse(localStorage.getItem('neoVaultPasswords')) || [];
             passwords = passwords.filter(p => p.id !== id);
-            localStorage.setItem('myPasswords', JSON.stringify(passwords));
+            localStorage.setItem('neoVaultPasswords', JSON.stringify(passwords));
             loadPasswords();
         }
     }
